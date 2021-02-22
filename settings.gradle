@@ -1,0 +1,4 @@
+include ':network'
+include ':domain'
+include ':app'
+rootProject.name = "EagleEye"
