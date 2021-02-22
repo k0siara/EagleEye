@@ -3,6 +3,7 @@ package com.patrykkosieradzki.eagleeye
 import android.app.Application
 import androidx.databinding.library.BuildConfig
 import com.patrykkosieradzki.eagleeye.di.appModule
+import com.patrykkosieradzki.eagleeye.network.di.networkModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -19,7 +20,10 @@ class EagleEyeApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(this@EagleEyeApplication)
-            modules(networkModule, appModule)
+            modules(
+                networkModule,
+                appModule
+            )
         }
     }
 }
