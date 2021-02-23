@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/cameraListFragment">
+
+    <fragment
+        android:id="@+id/cameraListFragment"
+        tools:layout="@layout/camera_list_fragment"
+        android:name="com.patrykkosieradzki.eagleeye.ui.cameras.main.CameraListFragment"
+        android:label="CameraListFragment" >
+        <action
+            android:id="@+id/action_cameraListFragment_to_cameraDetailsFragment"
+            app:destination="@id/cameraDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraDetailsFragment"
+        tools:layout="@layout/camera_details_fragment"
+        android:name="com.patrykkosieradzki.eagleeye.ui.cameras.details.CameraDetailsFragment"
+        android:label="CameraDetailsFragment" />
+</navigation>

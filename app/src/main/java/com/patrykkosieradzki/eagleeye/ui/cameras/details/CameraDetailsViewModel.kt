@@ -1,19 +1,19 @@
-package com.patrykkosieradzki.eagleeye.ui.login
+package com.patrykkosieradzki.eagleeye.ui.cameras.details
 
 import com.patrykkosieradzki.eagleeye.ui.utils.BaseViewModel
 import com.patrykkosieradzki.eagleeye.ui.utils.ViewState
 
-class LoginViewModel(
+class CameraDetailsViewModel(
 
-) : BaseViewModel<LoginViewState>(
-    initialState = LoginViewState(inProgress = true)
+) : BaseViewModel<CameraDetailsViewState>(
+    initialState = CameraDetailsViewState(inProgress = true)
 ) {
     override fun initialize() {
 
     }
 }
 
-data class LoginViewState(
+data class CameraDetailsViewState(
     override val inProgress: Boolean
 ) : ViewState {
     override fun toSuccess() = copy(inProgress = false)

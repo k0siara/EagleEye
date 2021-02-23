@@ -2,11 +2,14 @@ package com.patrykkosieradzki.eagleeye.ui.utils
 
 import androidx.lifecycle.*
 import com.hadilq.liveevent.LiveEvent
+import com.patrykkosieradzki.eagleeye.domain.usecases.CheckSessionUseCase
+import com.patrykkosieradzki.eagleeye.utils.AllOpen
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+@AllOpen
 abstract class BaseViewModel<STATE : ViewState>(
     private val initialState: STATE
 ) : ViewModel() {
@@ -29,9 +32,21 @@ abstract class BaseViewModel<STATE : ViewState>(
         }
     }
 
-    abstract fun initialize()
+    open fun initialize() {}
 
-    protected fun updateError(exception: Throwable): ErrorEvent {
+    fun checkSessionOnResume(checkSessionUseCase: CheckSessionUseCase) {
+        safeLaunch {
+            Timber.d("checking session on fragment callback")
+            checkSessionUseCase.invoke()
+            onResumeWithValidSession()
+        }
+    }
+
+    fun onResumeWithValidSession() {
+        Timber.d("session is valid. You can override this function to call services")
+    }
+
+    protected open fun updateError(exception: Throwable): ErrorEvent {
         return ErrorEvent(exception, isInitialState && _viewState.valueNN.inProgress)
     }
 
