@@ -16,6 +16,8 @@ dependencies {
 
     implementation deps.koin.koin_android
 
+    implementation group: 'org.slf4j', name: 'slf4j-android', version: '1.7.21'
+    implementation 'io.github.microutils:kotlin-logging:1.12.0'
 }
 
 sourceCompatibility = "8"

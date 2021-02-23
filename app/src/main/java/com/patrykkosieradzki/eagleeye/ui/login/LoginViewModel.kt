@@ -9,7 +9,7 @@ import com.patrykkosieradzki.eagleeye.utils.*
 class LoginViewModel(
     private val loginUseCase: LoginUseCase
 ) : BaseViewModel<LoginViewState>(
-    initialState = LoginViewState(inProgress = true)
+    initialState = LoginViewState(inProgress = false)
 ) {
     val loggedInEvent = LiveEvent<Unit>()
 
@@ -23,11 +23,13 @@ class LoginViewModel(
 
     fun onLoginButtonClicked() {
         safeLaunch {
+            updateViewState { it.copy(inProgress = true) }
             loginUseCase.invoke(
                 viewState.valueNN.username,
                 viewState.valueNN.password
             )
             loggedInEvent.fireEvent()
+            updateViewState { it.toSuccess() }
         }
     }
 

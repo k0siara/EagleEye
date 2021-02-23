@@ -11,6 +11,7 @@ import android.widget.RelativeLayout
 import androidx.activity.addCallback
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -19,12 +20,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.airbnb.lottie.LottieAnimationView
+import com.airbnb.lottie.LottieDrawable
 import com.hadilq.liveevent.LiveEvent
 import com.patrykkosieradzki.eagleeye.BR
 import com.patrykkosieradzki.eagleeye.R
 import com.patrykkosieradzki.eagleeye.domain.AppConfiguration
 import com.patrykkosieradzki.eagleeye.domain.exceptions.ApiException
 import com.patrykkosieradzki.eagleeye.domain.usecases.CheckSessionUseCase
+import com.patrykkosieradzki.eagleeye.extensions.goneIfWithAnimation
 import com.patrykkosieradzki.eagleeye.ui.DesktopActivity
 import com.patrykkosieradzki.eagleeye.ui.LauncherActivity
 import com.patrykkosieradzki.eagleeye.ui.error.DialogFragmentFactory
@@ -45,8 +49,11 @@ abstract class BaseFragment<STATE : ViewState, VM : BaseViewModel<STATE>, VDB : 
         getViewModel(clazz = vmKClass)
     }
 
+    private var loader: LottieAnimationView? = null
+
     val appConfiguration: AppConfiguration by inject()
     val checkSessionUseCase: CheckSessionUseCase by inject()
+
     open val requireSession = true
 
     var onBackEvent: () -> Unit = {
@@ -83,24 +90,21 @@ abstract class BaseFragment<STATE : ViewState, VM : BaseViewModel<STATE>, VDB : 
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT
             )
-//            id = R.id.loader_container
+            id = R.id.loader_container
             addView(binding.root, ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT))
-//            loader = LottieAnimationView(requireContext()).apply {
-//                isClickable = true
-//                isFocusable = true
-//                visibility = View.GONE
-//                setBackgroundColor(
-//                    ContextCompat.getColor(
-//                        requireContext(),
-//                        R.color.progress_bar_background
-//                    )
-//                )
-//                setAnimation(R.raw.loader_animation)
-//                repeatMode = LottieDrawable.RESTART
-//                repeatCount = LottieDrawable.INFINITE
-//                playAnimation()
-//            }
-//            addView(loader, LayoutParams(MATCH_PARENT, MATCH_PARENT))
+            loader = LottieAnimationView(requireContext()).apply {
+                isClickable = true
+                isFocusable = true
+                visibility = View.GONE
+                setBackgroundColor(
+                    ContextCompat.getColor(requireContext(), R.color.white)
+                )
+                setAnimation(R.raw.lottie_loading_animation)
+                repeatMode = LottieDrawable.RESTART
+                repeatCount = LottieDrawable.INFINITE
+                playAnimation()
+            }
+            addView(loader, RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT))
         }
     }
 
@@ -108,7 +112,7 @@ abstract class BaseFragment<STATE : ViewState, VM : BaseViewModel<STATE>, VDB : 
         super.onViewCreated(view, savedInstanceState)
         with(viewModel) {
             inProgress.observe(viewLifecycleOwner) {
-//                loader?.goneIfWithAnimation(!it)
+                loader?.goneIfWithAnimation(!it)
             }
             showErrorEvent.observe(viewLifecycleOwner) {
                 showError(it)
@@ -117,7 +121,9 @@ abstract class BaseFragment<STATE : ViewState, VM : BaseViewModel<STATE>, VDB : 
                 onBackEvent.invoke()
             }
             setupViews(view)
-            initialize()
+            if (!requireSession || checkSessionUseCase.isValid()) {
+                initialize()
+            }
         }
     }
 

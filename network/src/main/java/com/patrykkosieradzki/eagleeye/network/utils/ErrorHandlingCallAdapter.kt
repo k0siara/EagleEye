@@ -1,6 +1,8 @@
 package com.patrykkosieradzki.eagleeye.network.utils
 
 import com.patrykkosieradzki.eagleeye.domain.usecases.SessionTimeoutException
+import mu.KLogging
+import mu.KotlinLogging
 import okhttp3.Request
 import okhttp3.ResponseBody
 import retrofit2.*
@@ -43,14 +45,14 @@ class ResultCall<T>(proxy: Call<T>, private val errorConverter: Converter<Respon
                 val code = response.code()
                 val result = if (code in 200 until 300) {
                     val body = response.body()
-                    println("response successful: ${body.toString()}", )
+                    logger.debug { "response successful: ${body.toString()}" }
                     ApiResult.Success(body)
                 } else {
                     try {
                         val apiError = response.errorBody()!!.string()
                         ApiResult.Failure(apiError)
                     } catch (ex: Exception) {
-                        println("unexpected error when parsing error message from server $ex")
+                        logger.error("unexpected error when parsing error message from server", ex)
                         ApiResult.OtherError(ex.message!!)
                     }
                 }
@@ -58,7 +60,7 @@ class ResultCall<T>(proxy: Call<T>, private val errorConverter: Converter<Respon
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
-                println("failure on network call $t")
+                logger.error("failure on network call ", t)
                 val result = when (t) {
                     is IOException -> ApiResult.NetworkError(t.message!!)
                     is SessionTimeoutException -> ApiResult.SessionTimeoutError
@@ -69,6 +71,8 @@ class ResultCall<T>(proxy: Call<T>, private val errorConverter: Converter<Respon
         })
 
     override fun cloneImpl() = ResultCall(proxy.clone(), errorConverter)
+
+    companion object: KLogging()
 }
 
 class ResultAdapter(

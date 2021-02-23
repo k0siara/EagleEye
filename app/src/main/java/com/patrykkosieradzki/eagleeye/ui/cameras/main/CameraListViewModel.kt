@@ -9,7 +9,7 @@ class CameraListViewModel(
     initialState = CameraListViewState(inProgress = true)
 ) {
     override fun initialize() {
-
+        updateViewState { it.toSuccess() }
     }
 }
 

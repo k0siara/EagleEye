@@ -3,6 +3,9 @@ apply plugin: 'kotlin'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.kotlin.stdlib
+
+    implementation group: 'org.slf4j', name: 'slf4j-android', version: '1.7.21'
+    implementation 'io.github.microutils:kotlin-logging:1.12.0'
 }
 
 sourceCompatibility = "8"
