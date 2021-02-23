@@ -27,6 +27,12 @@ val appModule = module {
         InMemoryUserSessionRepository()
     }
 
+    factory<SaveSessionUseCase> {
+        SaveSessionUseCaseImpl(
+            sessionRepository = get()
+        )
+    }
+
     factory<GetSessionUseCase> {
         GetSessionUseCaseImpl(
             userSessionRepository = get(),
@@ -49,9 +55,19 @@ val appModule = module {
 
     factory<LoginUseCase> {
         LoginUseCaseImpl(
-            loginRepository = get(),
-            userSessionRepository = get(),
-            timestampProvider = get()
+            loginRepository = get()
+        )
+    }
+
+    factory<GetListOfCamerasUseCase> {
+        GetListOfCamerasUseCaseImpl(
+            cameraRepository = get()
+        )
+    }
+
+    factory<GetCameraDetailsUseCase> {
+        GetCameraDetailsUseCaseImpl(
+            cameraRepository = get()
         )
     }
 
@@ -61,7 +77,13 @@ val appModule = module {
         )
     }
 
-    viewModel { CameraListViewModel() }
+    viewModel {
+        CameraListViewModel(
+            getListOfCamerasUseCase = get()
+        )
+    }
 
-    viewModel { CameraDetailsViewModel() }
+    viewModel { CameraDetailsViewModel(
+        getCameraDetailsUseCase = get()
+    ) }
 }

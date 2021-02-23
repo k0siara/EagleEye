@@ -1,3 +1,6 @@
 <resources>
-
+    <string name="camera_name_label">Camera name</string>
+    <string name="camera_guid_label">Camera guid</string>
+    <string name="camera_username_label">Camera username</string>
+    <string name="camera_password_label">Camera password</string>
 </resources>

@@ -18,5 +18,9 @@
         android:id="@+id/cameraDetailsFragment"
         tools:layout="@layout/camera_details_fragment"
         android:name="com.patrykkosieradzki.eagleeye.ui.cameras.details.CameraDetailsFragment"
-        android:label="CameraDetailsFragment" />
+        android:label="CameraDetailsFragment" >
+        <argument
+            android:name="cameraId"
+            app:argType="string" />
+    </fragment>
 </navigation>

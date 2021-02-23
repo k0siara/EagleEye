@@ -1,6 +1,6 @@
 package com.patrykkosieradzki.eagleeye.domain.model
 
-data class CredentialsData(
+data class UserCredentialsData(
     val username: String,
     val password: String
 )

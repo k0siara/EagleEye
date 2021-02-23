@@ -13,11 +13,11 @@ class GetSessionUseCaseImpl(
 ) : GetSessionUseCase {
     override fun invoke(): String? {
         val sessionState = userSessionRepository.getSessionState()
-        if (sessionState.token != null) {
+        if (sessionState.authKeyCookie != null) {
             if (timestampProvider.isExpired(sessionState.validUntilTimestamp)) {
                 throw SessionTimeoutException()
             }
-            return sessionState.token
+            return sessionState.authKeyCookie
         }
         return null
     }

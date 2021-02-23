@@ -1,9 +1,12 @@
 package com.patrykkosieradzki.eagleeye.network.di
 
 import com.patrykkosieradzki.eagleeye.domain.AppConfiguration
+import com.patrykkosieradzki.eagleeye.domain.repositories.CameraRepository
 import com.patrykkosieradzki.eagleeye.domain.repositories.LoginRepository
+import com.patrykkosieradzki.eagleeye.network.repositories.CameraApiRepository
 import com.patrykkosieradzki.eagleeye.network.repositories.LoginApiRepository
-import com.patrykkosieradzki.eagleeye.network.services.EagleEyeService
+import com.patrykkosieradzki.eagleeye.network.services.EagleEyeCameraService
+import com.patrykkosieradzki.eagleeye.network.services.EagleEyeLoginService
 import com.patrykkosieradzki.eagleeye.network.utils.ErrorHandlingCallAdapterFactory
 import com.patrykkosieradzki.eagleeye.network.utils.NetworkHandler
 import com.squareup.moshi.Moshi
@@ -21,9 +24,10 @@ val networkModule = module {
             .build()
     }
 
-    single {
-        OkHttpClient.Builder()
-            .build()
+    single<OkHttpClient> {
+        CustomOkHttpClientFactory(
+            appConfiguration = get()
+        ).createOkHttpClient()
     }
 
     single<Retrofit> {
@@ -42,13 +46,24 @@ val networkModule = module {
         )
     }
 
-    single<EagleEyeService> {
-        get<Retrofit>().create(EagleEyeService::class.java)
+    single<EagleEyeLoginService> {
+        get<Retrofit>().create(EagleEyeLoginService::class.java)
+    }
+
+    single<EagleEyeCameraService> {
+        get<Retrofit>().create(EagleEyeCameraService::class.java)
     }
 
     single<LoginRepository> {
         LoginApiRepository(
-            eagleEyeService = get(),
+            eagleEyeLoginService = get(),
+            networkHandler = get()
+        )
+    }
+
+    single<CameraRepository> {
+        CameraApiRepository(
+            cameraService = get(),
             networkHandler = get()
         )
     }

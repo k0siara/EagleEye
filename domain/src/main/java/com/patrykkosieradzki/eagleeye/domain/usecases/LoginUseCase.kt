@@ -1,6 +1,7 @@
 package com.patrykkosieradzki.eagleeye.domain.usecases
 
-import com.patrykkosieradzki.eagleeye.domain.model.CredentialsData
+import com.patrykkosieradzki.eagleeye.domain.model.TokenCredentialsData
+import com.patrykkosieradzki.eagleeye.domain.model.UserCredentialsData
 import com.patrykkosieradzki.eagleeye.domain.repositories.*
 
 interface LoginUseCase {
@@ -8,22 +9,13 @@ interface LoginUseCase {
 }
 
 class LoginUseCaseImpl(
-    private val loginRepository: LoginRepository,
-    private val userSessionRepository: UserSessionRepository,
-    private val timestampProvider: TimestampProvider
+    private val loginRepository: LoginRepository
 ) : LoginUseCase {
     override suspend fun invoke(username: String, password: String) {
-        val token = loginRepository.login(CredentialsData(
+        val token = loginRepository.authenticate(UserCredentialsData(
             username = username,
             password = password
         ))
-        userSessionRepository.saveSessionState(SessionState(
-            token = token,
-            validUntilTimestamp = timestampProvider.getTimestampInFuture(TOKEN_EXPIRATION)
-        ))
-    }
-
-    companion object {
-        const val TOKEN_EXPIRATION = 30
+        loginRepository.authorize(TokenCredentialsData(token))
     }
 }

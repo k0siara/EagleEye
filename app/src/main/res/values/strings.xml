@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">EagleEye</string>
     <string name="general_error_message">Service not available, try again later</string>
-
+    <string name="not_provided">Not provided</string>
     <string name="error">Oops…</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>

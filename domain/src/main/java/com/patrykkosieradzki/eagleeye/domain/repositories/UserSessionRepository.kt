@@ -1,7 +1,7 @@
 package com.patrykkosieradzki.eagleeye.domain.repositories
 
 data class SessionState(
-    val token: String? = null,
+    val authKeyCookie: String? = null,
     val validUntilTimestamp : Long = 0L
 )
 
@@ -17,12 +17,12 @@ class InMemoryUserSessionRepository : UserSessionRepository {
     private var userSessionState = SessionState()
 
     override val isLoggedIn: Boolean
-        get() = getSessionState().token != null
+        get() = getSessionState().authKeyCookie != null
 
     @Synchronized
     override fun saveSessionState(sessionState: SessionState) {
         userSessionState = userSessionState.copy(
-            token = sessionState.token,
+            authKeyCookie = sessionState.authKeyCookie,
             validUntilTimestamp = sessionState.validUntilTimestamp
         )
     }
@@ -33,7 +33,7 @@ class InMemoryUserSessionRepository : UserSessionRepository {
     @Synchronized
     override fun clearSessionState() {
         userSessionState = userSessionState.copy(
-            token = null,
+            authKeyCookie = null,
             validUntilTimestamp = 0L
         )
     }
