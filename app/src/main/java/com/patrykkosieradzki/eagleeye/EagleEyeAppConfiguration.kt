@@ -1,6 +1,5 @@
 package com.patrykkosieradzki.eagleeye
 
-import androidx.databinding.library.BuildConfig
 import com.patrykkosieradzki.eagleeye.domain.AppConfiguration
 
 class EagleEyeAppConfiguration : AppConfiguration {
