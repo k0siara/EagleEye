@@ -1,5 +1,7 @@
 package com.patrykkosieradzki.eagleeye.ui.login
 
+import com.patrykkosieradzki.eagleeye.ui.utils.ErrorEvent
+import com.patrykkosieradzki.eagleeye.ui.utils.fireEvent
 import com.patrykkosieradzki.eagleeye.utils.*
 import org.junit.Rule
 import org.junit.Test
@@ -22,13 +24,19 @@ class LoginFragmentShould : RobotTest<LoginFragmentRobot>() {
         withRobot {
             startFragment(LoginFragment())
             capture("01_Login_Screen_Empty")
+            wait(1)
             setViewState(LoginViewState(
                     username = "eagle@eye.com",
                     password = "super_password",
                     inProgress = false
             ))
             capture("01_Login_Screen_Filled")
-            wait(15)
+            wait(1)
+            onViewModel {
+                showErrorEvent.fireEvent(ErrorEvent(LoginViewModel.LOGIN_DATA_INCORRECT))
+            }
+            capture("01_Login_Screen_Error", waitForCaptureInMs = 1000)
+            wait(1)
         }
     }
 

@@ -21,7 +21,7 @@ open class Robot : ScreenshotTest {
 
     fun wait(seconds: Int) = TimeUnit.SECONDS.sleep(seconds.toLong())
 
-    private fun waitMs(milliseconds: Int) = TimeUnit.MILLISECONDS.sleep(milliseconds.toLong())
+    fun waitMs(milliseconds: Int) = TimeUnit.MILLISECONDS.sleep(milliseconds.toLong())
 
     fun capture(tag: String, waitForCaptureInMs: Int = 500, inputToHide: Int = 0) {
         if (shot) {

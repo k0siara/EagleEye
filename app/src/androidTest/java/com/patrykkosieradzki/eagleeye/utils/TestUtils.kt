@@ -15,7 +15,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.hadilq.liveevent.LiveEvent
 import com.nhaarman.mockitokotlin2.mock
-import com.patrykkosieradzki.eagleeye.ActivityForTestingFragment
 import com.patrykkosieradzki.eagleeye.R
 import com.patrykkosieradzki.eagleeye.ui.utils.BaseFragment
 import com.patrykkosieradzki.eagleeye.ui.utils.BaseViewModel
