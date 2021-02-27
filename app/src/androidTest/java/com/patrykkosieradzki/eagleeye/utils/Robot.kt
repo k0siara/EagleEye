@@ -10,35 +10,29 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.ActivityTestRule
-import com.karumi.shot.ScreenshotTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 import org.koin.test.KoinTest
 import java.lang.reflect.Field
 import java.util.concurrent.TimeUnit
 
-open class Robot : ScreenshotTest {
+open class Robot {
 
     fun wait(seconds: Int) = TimeUnit.SECONDS.sleep(seconds.toLong())
 
     fun waitMs(milliseconds: Int) = TimeUnit.MILLISECONDS.sleep(milliseconds.toLong())
 
     fun capture(tag: String, waitForCaptureInMs: Int = 500, inputToHide: Int = 0) {
-        if (shot) {
+//        if (shot) {
             if (inputToHide != 0) {
                 Espresso.onView(ViewMatchers.withId(inputToHide)).perform(HideCursorAction())
             }
             waitMs(waitForCaptureInMs) // wait 1 sec or more, for animations to end
             val topLevelView = getRecentDecorView(getWindowDecorViews())
             topLevelView?.let {
-                compareScreenshot(
-                    view = topLevelView,
-                    heightInPx = topLevelView.height,
-                    widthInPx = topLevelView.width,
-                    name = tag
-                )
+                takeScreenshot(topLevelView, screenShotName = tag)
             }
-        }
+//        }
     }
 
     @Suppress("UNCHECKED_CAST")

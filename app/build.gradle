@@ -14,14 +14,15 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: "kotlin-allopen"
 apply plugin: 'kotlin-kapt'
-apply plugin: 'shot'
+
+def appId = "com.patrykkosieradzki.eagleeye"
 
 android {
     compileSdkVersion 30
     buildToolsVersion "29.0.2"
 
     defaultConfig {
-        applicationId "com.patrykkosieradzki.eagleeye"
+        applicationId appId
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
@@ -41,6 +42,10 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    adbOptions {
+        installOptions '-g', '-r'
     }
 
     buildFeatures.dataBinding = true
@@ -118,7 +123,6 @@ dependencies {
     androidTestImplementation(deps.koin_test) {
         exclude group: 'org.mockito'
     }
-    androidTestImplementation 'com.facebook.testing.screenshot:core:0.13.0'
     androidTestImplementation 'org.mockito:mockito-android:3.8.0'
     androidTestImplementation deps.espresso.values()
     androidTestUtil 'androidx.test:orchestrator:1.3.0'
@@ -137,4 +141,42 @@ dependencies {
 
 allOpen {
     annotation("com.patrykkosieradzki.eagleeye.utils.AllOpen")
+}
+
+def projectScreenshotsDirectory = "$projectDir/screenshots"
+def deviceScreenshotsDirectory = '/sdcard/Pictures/' + appId + '/debug/screenshots'
+
+def clearScreenshotsTask = task('clearScreenshots', type: Exec) {
+    println deviceScreenshotsDirectory
+    executable "${android.getAdbExe().toString()}"
+    args 'shell', 'rm', '-r', deviceScreenshotsDirectory
+}
+
+def createScreenshotDirectoryTask = task('createScreenshotDirectory', type: Exec, group: 'reporting') {
+    executable "${android.getAdbExe().toString()}"
+    args 'shell', 'mkdir', '-p', deviceScreenshotsDirectory
+}
+
+def fetchScreenshotsTask = task('fetchScreenshots', type: Exec, group: 'reporting') {
+    executable "${android.getAdbExe().toString()}"
+    args 'pull', deviceScreenshotsDirectory + '/.', projectScreenshotsDirectory
+    finalizedBy {
+        clearScreenshotsTask
+    }
+
+    dependsOn {
+        createScreenshotDirectoryTask
+    }
+
+    doFirst {
+        new File(projectScreenshotsDirectory).mkdirs()
+    }
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'connectedDebugAndroidTest') {
+        task.finalizedBy {
+            fetchScreenshotsTask
+        }
+    }
 }
