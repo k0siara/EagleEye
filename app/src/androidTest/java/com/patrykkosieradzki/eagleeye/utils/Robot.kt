@@ -10,9 +10,14 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.ActivityTestRule
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.stub
+import com.patrykkosieradzki.eagleeye.domain.usecases.CheckSessionUseCase
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
+import org.junit.Before
 import org.koin.test.KoinTest
+import org.koin.test.mock.declareMock
 import java.lang.reflect.Field
 import java.util.concurrent.TimeUnit
 
@@ -120,6 +125,15 @@ open class Robot {
 }
 
 abstract class RobotTest<R : Robot> : KoinTest {
+
+    @Before
+    fun baseSetup() {
+        declareMock<CheckSessionUseCase> {
+            stub {
+                on { isValid() } doReturn true
+            }
+        }
+    }
 
     protected fun withRobot(steps: R.() -> Unit) {
         createRobot().apply(steps)

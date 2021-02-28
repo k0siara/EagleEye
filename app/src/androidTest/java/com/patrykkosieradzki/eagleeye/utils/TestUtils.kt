@@ -71,17 +71,8 @@ open class BaseFragmentTestRule<T : AppCompatActivity>(
 ) : ActivityTestRule<T>(
     testActivity, true, false
 ), KoinTest {
+
     private var isInitialized: Boolean = false
-
-    override fun beforeActivityLaunched() {
-        super.beforeActivityLaunched()
-
-//        val
-//
-//        declareModule {
-//            factory { sessionRepositoryMock }
-//        }
-    }
 
     override fun afterActivityLaunched() {
         if (usesIntents) {

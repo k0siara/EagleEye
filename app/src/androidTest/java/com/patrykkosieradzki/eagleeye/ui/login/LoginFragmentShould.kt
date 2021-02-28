@@ -2,17 +2,14 @@ package com.patrykkosieradzki.eagleeye.ui.login
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import com.patrykkosieradzki.eagleeye.ui.utils.ErrorEvent
 import com.patrykkosieradzki.eagleeye.ui.utils.fireEvent
 import com.patrykkosieradzki.eagleeye.utils.*
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.koin.test.mock.declareMock
 
-@RunWith(AndroidJUnit4::class)
 class LoginFragmentShould : RobotTest<LoginFragmentRobot>() {
 
     @get:Rule
@@ -24,6 +21,9 @@ class LoginFragmentShould : RobotTest<LoginFragmentRobot>() {
     val rule = fragmentTestRuleWithMocks{
         declareMock<LoginViewModel>()
     }
+
+    @get:Rule
+    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
 
     @Test
     fun showLoginScreen() {
