@@ -19,6 +19,9 @@ buildscript {
 }
 
 allprojects {
+    ext {
+        isIdeBuild = project.properties['android.injected.invoked.from.ide'] == 'true'
+    }
     repositories {
         google()
         jcenter()

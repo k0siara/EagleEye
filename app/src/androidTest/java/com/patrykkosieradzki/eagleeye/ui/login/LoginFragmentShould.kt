@@ -25,9 +25,6 @@ class LoginFragmentShould : RobotTest<LoginFragmentRobot>() {
         declareMock<LoginViewModel>()
     }
 
-    @get:Rule
-    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
-
     @Test
     fun showLoginScreen() {
         withRobot {

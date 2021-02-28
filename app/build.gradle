@@ -1,3 +1,5 @@
+ext.enableShot = gradle.startParameter.taskNames.size() > 0 && gradle.startParameter.taskNames.get(0) == "connectedDebugAndroidTest"
+
 buildscript {
     repositories {
         google()
@@ -25,12 +27,29 @@ android {
         applicationId appId
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+
+        def gitCommitCount = 1
+        if (!isIdeBuild && project.ext.enableShot == false) {
+            gitCommitCount = Integer.valueOf("git rev-list HEAD --count".execute().text.trim())
+        }
+        versionCode gitCommitCount
+        versionName "1.0."
+        versionNameSuffix "$gitCommitCount"
+        project.ext.appVersion = versionName + versionNameSuffix
 
         testInstrumentationRunnerArguments clearPackageData: 'true'
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments shot: 'true'
+        testInstrumentationRunner "com.patrykkosieradzki.eagleeye.utils.ScreenshotsRunner"
+        if (project.ext.enableShot == true) {
+            testInstrumentationRunnerArguments shot: 'true'
+        }
+    }
+
+    testOptions {
+        if (project.ext.enableShot == false) {
+            if (!isIdeBuild) {
+                execution 'ANDROIDX_TEST_ORCHESTRATOR'
+            }
+        }
     }
 
     buildTypes {

@@ -23,16 +23,16 @@ open class Robot {
     fun waitMs(milliseconds: Int) = TimeUnit.MILLISECONDS.sleep(milliseconds.toLong())
 
     fun capture(tag: String, waitForCaptureInMs: Int = 500, inputToHide: Int = 0) {
-//        if (shot) {
+        if (shot) {
             if (inputToHide != 0) {
                 Espresso.onView(ViewMatchers.withId(inputToHide)).perform(HideCursorAction())
             }
-            waitMs(waitForCaptureInMs) // wait 1 sec or more, for animations to end
+            waitMs(waitForCaptureInMs)
             val topLevelView = getRecentDecorView(getWindowDecorViews())
             topLevelView?.let {
                 takeScreenshot(topLevelView, screenShotName = tag)
             }
-//        }
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
